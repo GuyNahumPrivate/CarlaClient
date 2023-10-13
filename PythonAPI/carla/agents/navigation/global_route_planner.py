@@ -13,22 +13,24 @@ import numpy as np
 import networkx as nx
 
 import carla
-from agents.navigation.local_planner import RoadOption
-from agents.tools.misc import vector
+from ...agents.navigation.local_planner import RoadOption
+from ...agents.tools.misc import vector
+from GraphSearcher.graph_searcher import GraphSearcher
+from GraphSearcher.astar_graph_searcher import AStarGraphSearcher
 
 class GlobalRoutePlanner(object):
     """
     This class provides a very high level route plan.
     """
 
-    def __init__(self, wmap, sampling_resolution):
+    def __init__(self, wmap, sampling_resolution, graph_searcher: GraphSearcher = AStarGraphSearcher()):
         self._sampling_resolution = sampling_resolution
         self._wmap = wmap
         self._topology = None
         self._graph = None
         self._id_map = None
         self._road_id_to_edge = None
-
+        self.graph_searcher = graph_searcher
         self._intersection_end_node = -1
         self._previous_decision = RoadOption.VOID
 
@@ -295,9 +297,13 @@ class GlobalRoutePlanner(object):
         """
         start, end = self._localize(origin), self._localize(destination)
 
-        route = nx.astar_path(
-            self._graph, source=start[0], target=end[0],
-            heuristic=self._distance_heuristic, weight='length')
+        route = self.graph_searcher.find_path(
+            self._graph,
+            source=start[0],
+            target=end[0],
+            heuristic=self._distance_heuristic,
+            weight='length')
+
         route.append(end[1])
         return route
 
