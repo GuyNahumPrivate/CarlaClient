@@ -9,6 +9,8 @@ This module provides GlobalRoutePlanner implementation.
 """
 
 import math
+from builtins import str
+
 import numpy as np
 import networkx as nx
 
@@ -22,8 +24,7 @@ class GlobalRoutePlanner(object):
     """
     This class provides a very high level route plan.
     """
-
-    def __init__(self, wmap, sampling_resolution, graph_searcher: GraphSearcher = AStarGraphSearcher()):
+    def __init__(self, wmap, sampling_resolution, world=None, graph_searcher: GraphSearcher=AStarGraphSearcher(), debug = False):
         self._sampling_resolution = sampling_resolution
         self._wmap = wmap
         self._topology = None
@@ -33,7 +34,9 @@ class GlobalRoutePlanner(object):
         self.graph_searcher = graph_searcher
         self._intersection_end_node = -1
         self._previous_decision = RoadOption.VOID
-
+        self._world = world
+        self.blue = carla.Color(47, 210, 231)
+        self.debug = debug
         # Build the graph
         self._build_topology()
         self._build_graph()
@@ -153,6 +156,7 @@ class GlobalRoutePlanner(object):
                 # Adding unique nodes and populating id_map
                 if vertex not in self._id_map:
                     new_id = len(self._id_map)
+                    self._draw_vertex(vertex, new_id, 5)
                     self._id_map[vertex] = new_id
                     self._graph.add_node(new_id, vertex=vertex)
             n1 = self._id_map[entry_xyz]
@@ -177,6 +181,12 @@ class GlobalRoutePlanner(object):
                     [exit_carla_vector.x, exit_carla_vector.y, exit_carla_vector.z]),
                 net_vector=vector(entry_wp.transform.location, exit_wp.transform.location),
                 intersection=intersection, type=RoadOption.LANEFOLLOW)
+
+    def _draw_vertex(self, xyz, vertex_id, z):
+        if self.debug:
+            draw_location = carla.Location(x=xyz[0], y=xyz[1], z=xyz[2] + z)
+            title = "vertex: " + str(vertex_id) + " - " + str(xyz)
+            self._world.debug.draw_string(draw_location, title, False, self.blue, 50000000000)
 
     def _find_loose_ends(self):
         """
@@ -305,7 +315,16 @@ class GlobalRoutePlanner(object):
             weight='length')
 
         route.append(end[1])
+
+        self._draw_route(route)
         return route
+
+    def _draw_route(self, route):
+        print("route ", route)
+
+        for vertex_id in route:
+            vertex_location = self._graph.nodes[vertex_id]['vertex']
+            self._draw_vertex(vertex_location, "RouteToTarget", 1)
 
     def _successive_last_intersection_edge(self, index, route):
         """

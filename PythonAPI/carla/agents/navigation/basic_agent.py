@@ -94,9 +94,9 @@ class BasicAgent(object):
                 self._global_planner = grp_inst
             else:
                 print("Warning: Ignoring the given map as it is not a 'carla.Map'")
-                self._global_planner = GlobalRoutePlanner(self._map, self._sampling_resolution)
+                self._global_planner = GlobalRoutePlanner(self._map, self._sampling_resolution, self._world)
         else:
-            self._global_planner = GlobalRoutePlanner(self._map, self._sampling_resolution)
+            self._global_planner = GlobalRoutePlanner(self._map, self._sampling_resolution, self._world)
 
         # Get the static elements of the scene
         self._lights_list = self._world.get_actors().filter("*traffic_light*")
@@ -186,7 +186,7 @@ class BasicAgent(object):
         end_location = end_waypoint.transform.location
         return self._global_planner.trace_route(start_location, end_location)
 
-    def run_step(self):
+    def run_step(self, debug=False):
         """Execute one step of navigation."""
         hazard_detected = False
 
@@ -207,7 +207,7 @@ class BasicAgent(object):
         if affected_by_tlight:
             hazard_detected = True
 
-        control = self._local_planner.run_step()
+        control = self._local_planner.run_step(debug)
         if hazard_detected:
             control = self.add_emergency_stop(control)
 

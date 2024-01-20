@@ -68,6 +68,7 @@ class LocalPlanner(object):
 
         self._vehicle_controller = None
         self.target_waypoint = None
+        self.printed_target_waypoint = None
         self.target_road_option = None
 
         self._waypoints_queue = deque(maxlen=10000)
@@ -266,7 +267,10 @@ class LocalPlanner(object):
             control = self._vehicle_controller.run_step(self._target_speed, self.target_waypoint)
 
         if debug:
-            draw_waypoints(self._vehicle.get_world(), [self.target_waypoint], 1.0)
+            draw_waypoints(self._vehicle.get_world(), [self.target_waypoint], 5.0)
+            if self.printed_target_waypoint != self.target_waypoint:
+                self.printed_target_waypoint = self.target_waypoint
+                print("target waypoint ", self.target_waypoint)
 
         return control
 

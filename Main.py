@@ -1,18 +1,25 @@
-import carla
-from vehicle_builder import VehicleBuilder
 from auto_drive_simulate import AutoDrive
 from PythonAPI.carla.agents.navigation.basic_agent import BasicAgent
+from carla import Location
+from carla_world_facade import connect_world, clear, create_vehicle
+from preference_factors_config import get_road_type_factors, road_id_to_type
+from PythonAPI.carla.agents.navigation.global_route_planner import GlobalRoutePlanner
+from GraphSearcher.type_factored_graph_searcher import TypeFactoredGraphSearcher
+from GraphSearcher.astar_graph_searcher import AStarGraphSearcher
+import carla
 
-serverIP = 'localhost'
-serverPort = 2000
+world = connect_world()
+clear(world)
+destination = Location(x=6.006511, y=66.283257, z=0.600000)
+spawn_point = carla.Transform(carla.Location(x=0.445544, y=13.185217, z=0.600000),
+                              carla.Rotation(pitch=360, yaw=-179.840790, roll=0))
 
-client = carla.Client(serverIP, serverPort)
-world = client.get_world()
-spawn_points = world.get_map().get_spawn_points()
-bp_lib = world.get_blueprint_library()
+# Initialize agent
+road_type_factors = get_road_type_factors()
+graph_searcher = TypeFactoredGraphSearcher(AStarGraphSearcher(), road_type_factors, road_id_to_type)
+global_route_planner = GlobalRoutePlanner(world.get_map(), 2.0, world, graph_searcher)
+vehicle = create_vehicle(world, spawn_point)
+agent = BasicAgent(vehicle, target_speed=30, opt_dict={'ignore_traffic_lights': True, 'ignore_stop_signs': True}, map_inst=None, grp_inst=global_route_planner)
 
-spectator = world.get_spectator()
-vehicle = VehicleBuilder().a_vehicle(world)
-agent = BasicAgent(vehicle)
-
-AutoDrive(vehicle, agent, spectator, spawn_points).start_game_loop()
+AutoDrive(vehicle, agent, world.get_spectator())\
+    .start_game_loop(Location(x=6.006511, y=66.283257, z=0.600000), False, False)
