@@ -1,5 +1,5 @@
 class GraphSearcher:
-    """Returns a list of nodes in a shortest path between source and target
+    """Returns a list of nodes in a path between source and target
 
         Parameters
         ----------

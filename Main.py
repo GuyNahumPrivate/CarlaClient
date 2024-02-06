@@ -19,7 +19,7 @@ road_type_factors = get_road_type_factors()
 graph_searcher = TypeFactoredGraphSearcher(AStarGraphSearcher(), road_type_factors, road_id_to_type)
 global_route_planner = GlobalRoutePlanner(world.get_map(), 2.0, world, graph_searcher)
 vehicle = create_vehicle(world, spawn_point)
-agent = BasicAgent(vehicle, target_speed=30, opt_dict={'ignore_traffic_lights': True, 'ignore_stop_signs': True}, map_inst=None, grp_inst=global_route_planner)
+agent = BasicAgent(vehicle, target_speed=40, opt_dict={'ignore_traffic_lights': True, 'ignore_stop_signs': True}, map_inst=None, grp_inst=global_route_planner)
 
 AutoDrive(vehicle, agent, world.get_spectator())\
-    .start_game_loop(Location(x=6.006511, y=66.283257, z=0.600000), False, False)
+    .start_game_loop(destination, set_random_destination_on_complete=False, auto_adjust_spectator=False)
