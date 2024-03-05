@@ -1,6 +1,7 @@
 import random
 import carla
 from carla import Transform, Rotation, Location
+import time
 
 """
 Given a vehicle and an agent, this class make the vehicle reach to the specified destination by running the agent
@@ -25,22 +26,27 @@ class AutoDrive:
                                     self.vehicle.get_transform().rotation)
         self.spectator.set_transform(transform)
 
-    def start_game_loop(self, destination, set_random_destination_on_complete, auto_adjust_spectator):
-        print("starting game loop")
+    def start_game_loop(self, destination, set_random_destination_on_complete, auto_adjust_spectator, debug=True):
+        start_time = time.time()
+        print("starting game loop ", start_time)
         self.agent.set_destination(destination)
-        self.set_spectator()
+        # self.set_spectator()
 
         while True:
             self.vehicle.get_world().wait_for_tick()
 
             if self.agent.done():
-                print("The target has been reached, searching for another target")
+                end_time = time.time()
+                print("The target has been reached, searching for another target ", end_time)
+                print("Total time: ", end_time - start_time)
+
                 if set_random_destination_on_complete:
                     self.set_random_destination()
+                    start_time = time.time()
                 else:
                     break
 
-            control = self.agent.run_step(debug=True)
+            control = self.agent.run_step(debug=debug)
             self.vehicle.apply_control(control)
 
             if auto_adjust_spectator:
