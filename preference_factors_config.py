@@ -7,28 +7,28 @@ based on the user preference
 """
 
 
-prefer_highway: Dict[RoadType, float] = {
+prefer_highway_factors: Dict[RoadType, float] = {
+    RoadType.Unknown: 1,
+    RoadType.City: 10,
+    RoadType.Highway: 1
+}
+
+prefer_city_factors: Dict[RoadType, float] = {
     RoadType.Unknown: 1,
     RoadType.City: 0.1,
     RoadType.Highway: 1
 }
 
-prefer_city: Dict[RoadType, float] = {
-    RoadType.Unknown: 1,
-    RoadType.City: 0.1,
-    RoadType.Highway: 1
-}
-
-no_preference: Dict[RoadType, float] = {
+no_preference_factors: Dict[RoadType, float] = {
     RoadType.Unknown: 1,
     RoadType.City: 1,
     RoadType.Highway: 1
 }
 
 user_input_to_factors: Dict[int, Dict[RoadType, float]] = {
-    1: no_preference,
-    2: prefer_city,
-    3: prefer_highway
+    1: no_preference_factors,
+    2: prefer_city_factors,
+    3: prefer_highway_factors
 }
 
 
@@ -37,34 +37,16 @@ def get_road_type_factors():
     return user_input_to_factors[road_preference]
 
 
+# Labeling of road ids to types
 road_id_to_type = {
-    0: RoadType.City,
-    2: RoadType.Highway,
-    5: RoadType.Highway,
-    6: RoadType.City,
-    7: RoadType.City,
-    9: RoadType.Highway,
-    10: RoadType.Highway,
-    13: RoadType.Highway,
-    14: RoadType.Highway,
-    16: RoadType.Highway,
-    17: RoadType.Highway,
-    18: RoadType.Highway,
+    11: RoadType.City,
+    12: RoadType.City,
+    18: RoadType.City,
     19: RoadType.City,
-    20: RoadType.Highway,
-    22: RoadType.Highway,
-    33: RoadType.Highway,
-    41: RoadType.Highway,
-    100: RoadType.Highway,
-    105: RoadType.Highway,
-    254: RoadType.City,
-    338: RoadType.Highway,
+    20: RoadType.City,
+    21: RoadType.City,
+    256: RoadType.City,
+    268: RoadType.City,
+    382: RoadType.City,
     395: RoadType.City,
-    469: RoadType.City,
-    472: RoadType.City,
-    780: RoadType.City,
-    787: RoadType.City,
-    823: RoadType.City,
-    832: RoadType.City,
-    933: RoadType.Highway
 }

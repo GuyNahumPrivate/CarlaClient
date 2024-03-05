@@ -24,7 +24,7 @@ class GlobalRoutePlanner(object):
     """
     This class provides a very high level route plan.
     """
-    def __init__(self, wmap, sampling_resolution, world=None, graph_searcher: GraphSearcher=AStarGraphSearcher(), debug = False):
+    def __init__(self, wmap, sampling_resolution, world=None, graph_searcher: GraphSearcher=AStarGraphSearcher(), debug=False):
         self._sampling_resolution = sampling_resolution
         self._wmap = wmap
         self._topology = None
@@ -156,7 +156,7 @@ class GlobalRoutePlanner(object):
                 # Adding unique nodes and populating id_map
                 if vertex not in self._id_map:
                     new_id = len(self._id_map)
-                    self._draw_vertex(vertex, new_id, 5)
+                    self._draw_string(vertex, road_id, 5)
                     self._id_map[vertex] = new_id
                     self._graph.add_node(new_id, vertex=vertex)
             n1 = self._id_map[entry_xyz]
@@ -182,11 +182,10 @@ class GlobalRoutePlanner(object):
                 net_vector=vector(entry_wp.transform.location, exit_wp.transform.location),
                 intersection=intersection, type=RoadOption.LANEFOLLOW)
 
-    def _draw_vertex(self, xyz, vertex_id, z):
+    def _draw_string(self, xyz, title, z):
         if self.debug:
             draw_location = carla.Location(x=xyz[0], y=xyz[1], z=xyz[2] + z)
-            title = "vertex: " + str(vertex_id) + " - " + str(xyz)
-            self._world.debug.draw_string(draw_location, title, False, self.blue, 50000000000)
+            self._world.debug.draw_string(draw_location, str(title), False, self.blue, 50000000000)
 
     def _find_loose_ends(self):
         """
@@ -322,9 +321,9 @@ class GlobalRoutePlanner(object):
     def _draw_route(self, route):
         print("route ", route)
 
-        for vertex_id in route:
-            vertex_location = self._graph.nodes[vertex_id]['vertex']
-            self._draw_vertex(vertex_location, "RouteToTarget", 1)
+        # for vertex_id in route:
+        #     vertex_location = self._graph.nodes[vertex_id]['vertex']
+            # self._draw_string(vertex_location, "RouteToTarget", 1)
 
     def _successive_last_intersection_edge(self, index, route):
         """
