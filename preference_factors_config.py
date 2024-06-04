@@ -38,7 +38,7 @@ def get_road_type_factors():
 
 
 # Labeling of road ids to types
-road_id_to_type = {
+road_id_to_type: dict[int, RoadType] = {
     11: RoadType.City,
     12: RoadType.City,
     18: RoadType.City,
