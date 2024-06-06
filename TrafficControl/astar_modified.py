@@ -9,7 +9,6 @@ from networkx.algorithms.shortest_paths.weighted import _weight_function
 __all__ = ["astar_path_with_destination"]
 
 
-@nx._dispatch(edge_attrs="weight", preserve_node_attrs="heuristic")
 def astar_path_with_destination(G, source, target, heuristic=None, weight="weight"):
     """Returns a list of nodes in a shortest path between source and target
     using the A* ("A-star") algorithm.

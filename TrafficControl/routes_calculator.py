@@ -16,21 +16,13 @@ class RoadCongestion:
         self.time_to_congest[time] = self.time_to_congest.get(time, 0) + congestion
 
 
-# class CongestionManager:
-#
-#     def __init__(self, road_id_to_congestion: nx.DiGraph):
-#         self.road_id_to_congestion = create_road_congestion(graph)
-#
-#
-#     def create_road_congestion(self, graph: nx.DiGraph):
-#         road_id_to_congestion = {}
-#         for edge in graph.edges:
-#             road_id = graph[edge[0]][edge[1]]['road_id']
-#             road_id_to_congestion[road_id] = RoadCongestion(graph[edge[0]][edge[1]]['weight'], 100, 10)
-#         return road_id_to_congestion
-#     #self.graph = graph
-#
-#
-#     def calculate(self, start, end):
-#         # some code
-#         return routes
+road_ids = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 24, 33, 41, 89, 90, 100, 105, 125, 150, 151, 152, 160, 172, 179, 254, 255, 256, 268, 286, 296, 315, 338, 344, 375, 382, 395, 466, 467, 469, 472, 476, 486, 515, 516, 565, 566, 579, 584, 597, 608, 630, 637, 655, 675, 676, 703, 712, 735, 736, 763, 780, 787, 795, 801, 811, 823, 832, 843, 848, 875, 876, 900, 933, 934, 939]
+
+
+def get_road_id_to_congestion(max_capacity, max_factor):
+    road_id_to_congestion = {}
+
+    for road_id in road_ids:
+        road_id_to_congestion[road_id] = RoadCongestion(max_capacity, max_factor)
+
+    return road_id_to_congestion

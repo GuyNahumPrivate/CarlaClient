@@ -21,6 +21,13 @@ class GraphLoader:
 
         for edge in loaded_edges:
             edge_value = loaded_edges[edge]
-            loaded_graph.add_edge(edge_value.u, edge_value.v, length=edge_value.length)
+            length = edge_value.length
+            entry_waypoint = EntryWaypoint(edge_value.entry_waypoint['road_id'])
+            loaded_graph.add_edge(edge_value.u, edge_value.v, length=length, entry_waypoint=entry_waypoint)
 
         return loaded_graph
+
+
+class EntryWaypoint:
+    def __init__(self, road_id: int):
+        self.road_id = road_id

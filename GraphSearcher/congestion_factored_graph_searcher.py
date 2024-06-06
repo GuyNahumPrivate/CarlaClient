@@ -1,10 +1,9 @@
+from typing import Dict
+
 from GraphSearcher.graph_searcher import GraphSearcher
 from TrafficControl.routes_calculator import RoadCongestion
 from TrafficControl.astar_modified import astar_path_with_destination
 
-# Next Steps:
-# 1. Fix persist_graph_searcher.py and make benchmark_runner.py work
-# 2. run experiment that calculate the same route multiple times and see that when road is congensted the route changes
 
 """
 This class extends a graph searcher by applying factors by roads congestion to the edge's weights
@@ -13,7 +12,7 @@ This class extends a graph searcher by applying factors by roads congestion to t
 
 class CongestionFactoredGraphSearcher(GraphSearcher):
 
-    def __init__(self, road_id_to_congestion: dict[int, RoadCongestion]):
+    def __init__(self, road_id_to_congestion: Dict[int, RoadCongestion]):
         self.road_id_to_congestion = road_id_to_congestion
         self.default_road_congestion = RoadCongestion(1, 0)
 
@@ -28,7 +27,7 @@ class CongestionFactoredGraphSearcher(GraphSearcher):
         for i in range(len(path) - 1):
             edge = graph[path[i]][path[i + 1]]
             road_id = edge['entry_waypoint'].road_id
-            road_congestion = self.road_id_to_congestion[road_id]
+            road_congestion = self.road_id_to_congestion.get(road_id)
             if road_congestion:
                 road_congestion.update_congestion(total_distance, 1)
 
