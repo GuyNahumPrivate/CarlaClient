@@ -16,7 +16,7 @@ class RoadCongestion:
         return congestion_factor
 
     def update_congestion(self, time, congestion):
-        self.time_to_congest[time] = self.time_to_congest.get(time, 0) + congestion
+        self.time_to_congest[int(time)] = self.time_to_congest.get(time, 0) + congestion
 
 
 class RoadsCongestion:
@@ -25,8 +25,10 @@ class RoadsCongestion:
         self.road_id_to_congestion = road_id_to_congestion
         self.default_road_congestion = RoadCongestion(1, 0)
 
-    def get(self, road_id):
-        return self.road_id_to_congestion.get(road_id, self.default_road_congestion)
+    def get_congestion_factor(self, road_id, time):
+        return self.road_id_to_congestion\
+            .get(road_id, self.default_road_congestion)\
+            .get_congestion_factor(time)
 
     def update_congestion(self, path, weight, graph):
         total_distance = 0
@@ -42,7 +44,8 @@ class RoadsCongestion:
             else:
                 edge_length = weight(path[i], path[i + 1], edge)
 
-            total_distance += edge_length
+            factor = self.get_congestion_factor(road_id, total_distance)
+            total_distance += edge_length * factor
 
     def get_max_congestion(self):
         max_congestion = 0
