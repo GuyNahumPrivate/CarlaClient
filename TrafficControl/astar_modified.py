@@ -139,6 +139,13 @@ def astar_path_with_destination(G, source, target, heuristic=None, weight="weigh
         for neighbor, w in G_succ[curnode].items():
             # Pass dist to be able to calculate
             # Modified by Guy Nahum
+            # We should consider returning weight and factored weight,
+            # the factored weight will be used as the cost of the edge for the algorithm
+            # and the weight will be used to calculate the total distance to pass the algorithm
+            # this way we can make sure that we check the load on the correct time
+            # in this implementation, once the max factored is reach, it doesn't really matter
+            # but until that we might have unexpected behavior as when we will check the load, we might check it
+            # on the wrong time (factored) and the congestion level will be lower than expected
             cost = weight(curnode, neighbor, w, dist)
             if cost is None:
                 continue

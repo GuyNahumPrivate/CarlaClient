@@ -26,6 +26,7 @@ class CongestionFactoredGraphSearcher(GraphSearcher):
                 edge_weight = weight(edge_endpoint_1, edge_endpoint_2, edge_attributes)
 
             road_id = edge_attributes['entry_waypoint'].road_id
+
             congestion_factor = self.roads_congestion.get_congestion_factor(road_id, time)
 
             return edge_weight * congestion_factor
