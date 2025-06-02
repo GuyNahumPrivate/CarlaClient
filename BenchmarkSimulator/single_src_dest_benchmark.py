@@ -27,11 +27,13 @@ class SingleSrcDestBenchmark:
 
             upper_bound = max(upper_bound, factored_travel_time / travel_time)
 
-        print(f"{BColors.OKBLUE} factored_congestion_level: {evaluate_searcher.roads_congestion.get_max_congestion()}")
-        print(f"{BColors.OKBLUE} factored_average_travel_time: {total_evaluate_travel_time / total_path_calculation}")
-        print(f"{BColors.OKGREEN} congestion_level: {base_searcher.roads_congestion.get_max_congestion()}")
-        print(f"{BColors.OKGREEN} average_travel_time: {total_travel_time / total_path_calculation}")
-        print(f"{BColors.BOLD}{BColors.OKCYAN} upper_bound: {upper_bound}")
+        print(f"{BColors.OKBLUE} Evaluate Searcher:")
+        print(f"{BColors.OKBLUE} Congestion Level: {evaluate_searcher.roads_congestion.get_max_congestion()}")
+        print(f"{BColors.OKBLUE} Average Travel Time: {total_evaluate_travel_time / total_path_calculation}")
+        print(f"{BColors.OKGREEN} Base Searcher:")
+        print(f"{BColors.OKGREEN} Congestion Level: {base_searcher.roads_congestion.get_max_congestion()}")
+        print(f"{BColors.OKGREEN} Average Travel Time: {total_travel_time / total_path_calculation}")
+        print(f"{BColors.BOLD}{BColors.OKCYAN} Upper Bound: {upper_bound}")
 
     @staticmethod
     def calculate_path_length(graph, path, weight='length'):
